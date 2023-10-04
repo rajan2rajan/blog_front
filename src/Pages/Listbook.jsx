@@ -3,8 +3,10 @@ import ButtonComponent from "../Components/ButtonComponent";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Listbook() {
+    const navigate = useNavigate();
     async function book_list() {
         try {
             const response = await axios.get("http://localhost:8000/book");
@@ -13,6 +15,16 @@ function Listbook() {
             toast.error(err.message);
         }
     }
+
+    const delete_book = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8000/book/${id}`);
+            book_list();
+            toast.success("Book deleted successfully");
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
 
     useEffect(() => {
         book_list();
@@ -44,12 +56,11 @@ function Listbook() {
                                         <td>{item.name}</td>
                                         <td>{item.price}</td>
                                         <td>
-                                            {`http://localhost:8000${item.images}`}
-                                            {/* <img
-                                                src={`http://localhost:8000/${item.image}`}
-                                                // width="50px"
-                                                // height="50px"
-                                            /> */}
+                                            <img
+                                                src={`http://localhost:8000/${item.images}`}
+                                                width="50px"
+                                                height="50px"
+                                            />
                                         </td>
                                         <td>{item.category.name}</td>
 
@@ -57,13 +68,13 @@ function Listbook() {
                                         <td>
                                             <ButtonComponent
                                                 style="info"
-                                                onClick="editing"
+                                                operation={() => navigate(`/editbook/${item._id}`)}
                                                 name="Edit"
                                             />
 
                                             <ButtonComponent
                                                 style="danger"
-                                                onClick="deleting"
+                                                operation={() => delete_book(item._id)}
                                                 name="Delete"
                                             />
                                         </td>

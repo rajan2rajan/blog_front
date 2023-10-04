@@ -1,15 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LinkComponent from "./LinkComponent";
 import ButtonComponent from "./ButtonComponent";
-import InputComponent from "./InputComponent";
+import { toast } from "react-toastify";
 
 function Navbar() {
+    const navigate = useNavigate();
+    function logout() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+        navigate("/login");
+        toast.success("logout sucessfull");
+    }
+
     return (
         <div>
             <nav className="navbar bg-body-tertiary">
                 <div className="container-fluid">
                     <LinkComponent style="navbar-brand" to="/" name="Book seller" />
+                    {JSON.parse(localStorage.getItem("user"))?.name}
 
                     <ul className="nav">
                         <li className="nav-item">
@@ -54,9 +63,13 @@ function Navbar() {
                     </form>
                     <div>
                         <LinkComponent style="btn btn-outline-success" to="/login" name="Login" />
-                        <button className="btn btn-outline-danger" type="submit">
-                            Logout
-                        </button>
+
+                        <ButtonComponent
+                            label="logout"
+                            operation={logout}
+                            style="danger"
+                            name="logout"
+                        />
                     </div>
                 </div>
             </nav>

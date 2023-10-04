@@ -2,12 +2,21 @@ import React, { useEffect } from "react";
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-function AddBook() {
-    const data = { name: "", price: "", isbn: "", description: "", category: "", images: "" };
-    const [inputData, setinputData] = useState(data);
+function EditBook() {
+    const { id } = useParams();
+    const initialState = {
+        name: "",
+        price: "",
+        isbn: "",
+        description: "",
+        category: "",
+        images: "",
+    };
+    const [inputData, setinputData] = useState(initialState);
     function handleChange(e) {
         let { name, value, type } = e.target;
         if (type === "file") {
@@ -20,14 +29,12 @@ function AddBook() {
         try {
             const response = await axios.get("http://localhost:8000/category");
             setCategory(response.data);
-            // setting default category to first category (if not selected  then value will not be selected)
-            setinputData({ ...inputData, category: response.data[0]._id });
         } catch (error) {
             toast.error(error.message);
         }
     }
 
-    async function add_book(e) {
+    async function edit_book(e) {
         e.preventDefault();
         const formdata = new FormData();
         for (let key in inputData) {
@@ -35,7 +42,7 @@ function AddBook() {
         }
 
         try {
-            await axios.post("http://localhost:8000/book", formdata);
+            await axios.put(`http://localhost:8000/book/${id}`, formdata);
             setinputData({
                 ...inputData,
                 name: "",
@@ -44,15 +51,34 @@ function AddBook() {
                 description: "",
                 images: "",
             });
-            toast.success("Book Added Successfully");
+
+            toast.success("Book updated Successfully");
         } catch (err) {
             toast.error(err.message);
+        }
+    }
+
+    async function get_book() {
+        try {
+            let response = await axios.get(`http://localhost:8000/book/${id}`);
+            console.log(response.data);
+            setinputData({
+                name: response.data.name,
+                price: response.data.price,
+                isbn: response.data.isbn,
+                description: response.data.description,
+                category: response.data.category._id,
+                images: response.data.images,
+            });
+        } catch (error) {
+            toast.error(error.message);
         }
     }
 
     const [category, setCategory] = useState([]);
 
     useEffect(() => {
+        get_book();
         category_list();
     }, []);
 
@@ -62,7 +88,7 @@ function AddBook() {
                 <div className="row justify-content-center">
                     <div className="col-12 mt-3">
                         <h3 className="text-center">Add Book</h3>
-                        <form onSubmit={add_book}>
+                        <form onSubmit={edit_book}>
                             <div className="mb-3">
                                 <InputComponent
                                     label="Name"
@@ -133,6 +159,8 @@ function AddBook() {
                                     onChange={handleChange}
                                 />
                                 <br />
+
+                                <br />
                                 <ButtonComponent
                                     label="Add Book"
                                     type="submit"
@@ -148,4 +176,4 @@ function AddBook() {
     );
 }
 
-export default AddBook;
+export default EditBook;

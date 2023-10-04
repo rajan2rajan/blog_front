@@ -7,7 +7,6 @@ function BookComponent(props) {
                 <div className="card">
                     <img src={props.src} className="card-img-top" alt={props.alt} />
                     <div className="card-body">
-                        <p className="card-text">Created At: {props.createdAt}</p>
                         <p className="card-text">Name: {props.name}</p>
                         <p className="card-text">
                             Price {props.price} | isbn: {props.isbn}

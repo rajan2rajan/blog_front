@@ -63,7 +63,7 @@ function Edit_category() {
                                     Status
                                 </label>
                                 <select
-                                    class="form-select"
+                                    className="form-select"
                                     aria-label="Default select example"
                                     id="status"
                                     name="status"

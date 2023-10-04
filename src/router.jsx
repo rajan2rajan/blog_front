@@ -9,6 +9,7 @@ import Register from "./Pages/Register";
 import AddCategory from "./Pages/AddCategory";
 import ListCategory from "./Pages/ListCategory";
 import Edit_category from "./Pages/Edit_category";
+import Edit_Book from "./Pages/Edit_Book";
 
 const router = createBrowserRouter([
     {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
             {
                 path: "/addcategory/:id",
                 element: <Edit_category />,
+            },
+            {
+                path: "/editbook/:id",
+                element: <Edit_Book />,
             },
         ],
     },
