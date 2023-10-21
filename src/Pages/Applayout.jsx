@@ -5,7 +5,7 @@ import Navbar from "../Components/Navbar";
 function Applayout() {
     return (
         <>
-            ,<Navbar />
+            <Navbar />
             <Outlet />
         </>
     );

@@ -1,15 +1,21 @@
 import React from "react";
-import Navbar from "./Components/Navbar";
+import UserProvider from "./Context/UserProvider";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import { ToastContainer } from "react-toastify";
+import SearchProvider from "./Context/SearchProvider";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 function App() {
     return (
         <>
-            <RouterProvider router={router} />
-            <ToastContainer />
+            <UserProvider>
+                <SearchProvider>
+                    <RouterProvider router={router} />
+                    <ToastContainer />
+                </SearchProvider>
+            </UserProvider>
         </>
     );
 }

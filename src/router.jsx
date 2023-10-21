@@ -10,8 +10,13 @@ import AddCategory from "./Pages/AddCategory";
 import ListCategory from "./Pages/ListCategory";
 import Edit_category from "./Pages/Edit_category";
 import Edit_Book from "./Pages/Edit_Book";
+import Cart from "./Pages/Cart";
 
 const router = createBrowserRouter([
+    {
+        path: "/login",
+        element: <Login />,
+    },
     {
         element: <Applayout />,
         children: [
@@ -20,23 +25,20 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "/addbook",
+                path: "/admin/addbook",
                 element: <AddBook />,
             },
             {
-                path: "/listbook",
+                path: "/admin/listbook",
                 element: <Listbook />,
             },
+
             {
-                path: "/login",
-                element: <Login />,
-            },
-            {
-                path: "/addcategory",
+                path: "/admin/addcategory",
                 element: <AddCategory />,
             },
             {
-                path: "/listcategory",
+                path: "/admin/listcategory",
                 element: <ListCategory />,
             },
             {
@@ -46,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: "/editbook/:id",
                 element: <Edit_Book />,
+            },
+            {
+                path: "/cart",
+                element: <Cart />,
             },
         ],
     },

@@ -4,8 +4,14 @@ import ButtonComponent from "../Components/ButtonComponent";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { factory } from "../factory/factory";
+import { useContext } from "react";
+import { UserContext } from "../Context/UserProvider";
 
 function AddBook() {
+    const { state: auth, dispatch } = useContext(UserContext);
+    // const { auth, dispatch } = useAuthe();
+
     const data = { name: "", price: "", isbn: "", description: "", category: "", images: "" };
     const [inputData, setinputData] = useState(data);
     function handleChange(e) {
@@ -17,14 +23,19 @@ function AddBook() {
     }
 
     async function category_list() {
-        try {
-            const response = await axios.get("http://localhost:8000/category");
-            setCategory(response.data);
-            // setting default category to first category (if not selected  then value will not be selected)
-            setinputData({ ...inputData, category: response.data[0]._id });
-        } catch (error) {
-            toast.error(error.message);
-        }
+        const factory1 = new factory();
+        const response = await factory1.get_list("category", auth);
+        setCategory(response);
+        // setting default category to first category (if not selected  then value will not be selected)
+        setinputData({ ...inputData, category: response[0]._id });
+        // try {
+        //     const response = await axios.get("http://localhost:8000/category");
+        //     setCategory(response.data);
+        //     // setting default category to first category (if not selected  then value will not be selected)
+        //     setinputData({ ...inputData, category: response.data[0]._id });
+        // } catch (error) {
+        //     toast.error(error.message);
+        // }
     }
 
     async function add_book(e) {
@@ -33,21 +44,31 @@ function AddBook() {
         for (let key in inputData) {
             formdata.append(key, inputData[key]);
         }
+        const factory1 = new factory();
+        await factory1.post_data("book", formdata, auth);
+        setinputData({
+            ...inputData,
+            name: "",
+            price: "",
+            isbn: "",
+            description: "",
+            images: "",
+        });
 
-        try {
-            await axios.post("http://localhost:8000/book", formdata);
-            setinputData({
-                ...inputData,
-                name: "",
-                price: "",
-                isbn: "",
-                description: "",
-                images: "",
-            });
-            toast.success("Book Added Successfully");
-        } catch (err) {
-            toast.error(err.message);
-        }
+        // try {
+        //     await axios.post("http://localhost:8000/book", formdata);
+        //     // setinputData({
+        //     //     ...inputData,
+        //     //     name: "",
+        //     //     price: "",
+        //     //     isbn: "",
+        //     //     description: "",
+        //     //     images: "",
+        //     // });
+        //     toast.success("Book Added Successfully");
+        // } catch (err) {
+        //     toast.error(err.message);
+        // }
     }
 
     const [category, setCategory] = useState([]);

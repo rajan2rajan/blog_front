@@ -3,12 +3,16 @@ import InputComponent from "../Components/InputComponent";
 import { Link, json, useNavigate } from "react-router-dom";
 import ButtonComponent from "../Components/ButtonComponent";
 import LinkComponent from "../Components/LinkComponent";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { factory } from "../factory/factory";
+import { UserContext } from "../Context/UserProvider";
 
 function Login() {
     const navigate = useNavigate();
+    const { dispatch } = useContext(UserContext);
+
     const [inputData, setinputData] = useState({
         email: "",
         password: "",
@@ -23,13 +27,15 @@ function Login() {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:8000/auth/login", inputData);
+            dispatch({
+                type: "login",
+                payload: {
+                    user: response.data.data.user,
+                    access_token: response.data.data.access_token,
+                },
+            });
 
             toast.success("login Successfull");
-            console.log(response.data.data.access_token);
-            console.log(response.data.data.user);
-            localStorage.setItem("access_token", JSON.stringify(response.data.data.access_token));
-            localStorage.setItem("user", JSON.stringify(response.data.data.user));
-
             navigate("/");
         } catch (err) {
             toast.error(err.message);

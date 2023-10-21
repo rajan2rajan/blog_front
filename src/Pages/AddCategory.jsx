@@ -1,20 +1,28 @@
 import React from "react";
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { factory } from "../factory/factory";
+import { useContext } from "react";
+// import useAuthe from "../customeHooks/useAuthe";
+import { UserContext } from "../Context/UserProvider";
 
 function AddCategory() {
+    const { state: auth, dispatch } = useContext(UserContext);
+    // const { auth, dispatch } = useAuthe();
     async function handleSubmit(e) {
         e.preventDefault();
         const name = document.getElementById("name").value;
         const status = document.getElementById("status").value;
-        try {
-            await axios.post("http://localhost:8000/category", { name, status });
-            toast.success("Category added successfully");
-        } catch (err) {
-            toast.error("please fill all the fields");
-        }
+        const factory1 = new factory();
+        console.log(name, status);
+        await factory1.post_data("category", { name, status }, auth);
+
+        // try {
+        //     await axios.post("http://localhost:8000/category", { name, status });
+        //     toast.success("Category added successfully");
+        // } catch (err) {
+        //     toast.error("please fill all the fields");
+        // }
     }
 
     return (

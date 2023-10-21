@@ -1,29 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import ButtonComponent from "../Components/ButtonComponent";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/UserProvider";
+import { factory } from "../factory/factory";
+// import useAuthe from "../customeHooks/useAuthe";
 
 function Listbook() {
     const navigate = useNavigate();
+    const { state: auth, dispatch } = useContext(UserContext);
+    // const { auth, dispatch } = useAuthe();
     async function book_list() {
-        try {
-            const response = await axios.get("http://localhost:8000/book");
-            setBook(response.data);
-        } catch (err) {
-            toast.error(err.message);
-        }
+        const factory1 = new factory();
+        const response = await factory1.get_list("book", auth);
+        console.log("book");
+        setBook(response);
     }
 
     const delete_book = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8000/book/${id}`);
-            book_list();
-            toast.success("Book deleted successfully");
-        } catch (err) {
-            toast.error(err.message);
-        }
+        const factory1 = new factory();
+        await factory1.delete_data("book", id, auth);
+        book_list();
+
+        // try {
+        //     await axios.delete(`http://localhost:8000/book/${id}`);
+        //     book_list();
+        //     toast.success("Book deleted successfully");
+        // } catch (err) {
+        //     toast.error(err.message);
+        // }
     };
 
     useEffect(() => {

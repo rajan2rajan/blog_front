@@ -6,21 +6,31 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { factory } from "../factory/factory";
+import { useContext } from "react";
+import { UserContext } from "../Context/UserProvider";
+// import useAuthe from "../customeHooks/useAuthe";
 
 function Edit_category() {
     const navigate = useNavigate();
+    const { state: auth, dispatch } = useContext(UserContext);
+    // const { auth, dispatch } = useAuthe();
     const { id } = useParams();
     async function handleSubmit(e) {
         e.preventDefault();
         const name = document.getElementById("name").value;
         const status = document.getElementById("status").value;
-        try {
-            await axios.put(`http://localhost:8000/category/${id}`, { name, status });
-            toast.success("Category updated successfully");
-            navigate("/listcategory");
-        } catch (err) {
-            alert(err.message);
-        }
+        const factory1 = new factory();
+        await factory1.put_data("category", id, { name, status }, auth);
+
+        navigate("/listcategory");
+        // try {
+        //     await axios.put(`http://localhost:8000/category/${id}`, { name, status });
+        //     toast.success("Category updated successfully");
+        //     navigate("/listcategory");
+        // } catch (err) {
+        //     alert(err.message);
+        // }
     }
 
     useEffect(() => {
@@ -31,14 +41,18 @@ function Edit_category() {
     const [passstatus, setPassstatus] = useState();
 
     async function getDataById() {
-        try {
-            let response = await axios.get(`http://localhost:8000/category/${id}`);
-            setPassname(response.data.name);
-            setPassstatus(response.data.status);
-            console.log(response.data);
-        } catch (err) {
-            alert(err.message);
-        }
+        const factory1 = new factory();
+        const response = await factory1.get_list_id("category", id, auth);
+        setPassname(response.name);
+        setPassstatus(response.status);
+
+        // try {
+        //     let response = await axios.get(`http://localhost:8000/category/${id}`);
+        //     setPassname(response.data.name);
+        //     setPassstatus(response.data.status);
+        // } catch (err) {
+        //     alert(err.message);
+        // }
     }
 
     return (

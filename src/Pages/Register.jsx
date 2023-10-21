@@ -4,6 +4,7 @@ import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import LinkComponent from "../Components/LinkComponent";
 import { toast } from "react-toastify";
+import { factory } from "../factory/factory";
 import axios from "axios";
 import { useState } from "react";
 
@@ -20,19 +21,20 @@ function Register() {
     function handleChange(e) {
         const { name, value } = e.target;
         setinputData({ ...inputData, [name]: value });
-        console.log(inputData);
     }
 
     async function register(e) {
         e.preventDefault();
-        try {
-            const response = await axios.post("http://localhost:8000/auth/register", inputData);
-            toast.success("Registered Successfully");
-            console.log(response);
-            // navigate("/login");
-        } catch (err) {
-            toast.error(err.message);
-        }
+        const factory1 = new factory();
+        await factory1.post_data("auth/register", inputData);
+        // try {
+        //     const response = await axios.post("http://localhost:8000/auth/register", inputData);
+        //     toast.success("Registered Successfully");
+
+        //     // navigate("/login");
+        // } catch (err) {
+        //     toast.error(err.message);
+        // }
     }
 
     return (
