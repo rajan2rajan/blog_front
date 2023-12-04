@@ -8,47 +8,50 @@ import { useContext } from "react";
 import { UserContext } from "../Context/UserProvider";
 import { toast } from "react-toastify";
 import useAuthe from "../customeHooks/useAuthe";
+import { getCarts, addCartItem, deleteCartItem } from "../api/request.Api";
 
 function Cart() {
     // const { state: auth, dispatch } = useContext(UserContext);
     const { auth, dispatch } = useAuthe();
     async function getCart() {
-        const factory1 = new factory();
-        const response = await factory1.get_list("cart", auth);
-        setCart(response.items);
+        // const factory1 = new factory();
+        // const response = await factory1.get_list("cart", auth);
+        // setCart(response.items);
 
-        // try {
-        //     const response = await axios.get("http://localhost:8000/cart", {
-        //         headers: {
-        //             Authorization: `Bearer ${auth.access_token}`,
-        //         },
-        //     });
-
-        //     setCart(response.data.items);
-        // } catch (err) {
-        //     toast.error(err.message);
-        // }
+        try {
+            // const response = await axios.get("http://localhost:8000/cart", {
+            //     headers: {
+            //         Authorization: `Bearer ${auth.access_token}`,
+            //     },
+            // });
+            const response = await getCarts();
+            setCart(response.data.items);
+        } catch (err) {
+            toast.error(err.message);
+        }
     }
 
     async function add_cart(id) {
-        const factory1 = new factory();
-        await factory1.post_data("cart", { book: id }, auth);
-        getCart();
-        // try {
-        //     await axios.post(
-        //         `http://localhost:8000/cart`,
-        //         { book: id },
-        //         {
-        //             headers: {
-        //                 Authorization: `Bearer ${auth.access_token}`,
-        //             },
-        //         }
-        //     );
-        //     getCart();
-        //     toast.success("Book added to cart");
-        // } catch (err) {
-        //     toast.error(err.message);
-        // }
+        // const factory1 = new factory();
+        // await factory1.post_data("cart", { book: id }, auth);
+        // getCart();
+
+        try {
+            // await axios.post(
+            //     `http://localhost:8000/cart`,
+            //     { book: id },
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${auth.access_token}`,
+            //         },
+            //     }
+            // );
+            await addCartItem({ book: id });
+            getCart();
+            toast.success("Book added to cart");
+        } catch (err) {
+            toast.error(err.message);
+        }
     }
 
     async function delete_cart(id) {
@@ -56,17 +59,16 @@ function Cart() {
         // await factory1.delete_data("cart/remove", id, auth);
         // getCart();
         try {
-            console.log;
-            await axios.post(
-                `http://localhost:8000/cart/remove`,
-                { book: id },
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth.access_token}`,
-                    },
-                }
-            );
-
+            // await axios.post(
+            //     `http://localhost:8000/cart/remove`,
+            //     { book: id },
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${auth.access_token}`,
+            //         },
+            //     }
+            // );
+            await deleteCartItem({ book: id });
             toast.success("Book deleted from cart");
             getCart();
         } catch (err) {
@@ -79,8 +81,6 @@ function Cart() {
     }, []);
 
     const [cartshow, setCart] = useState([]);
-
-    const [number, setNumber] = useState(1);
 
     return (
         <>
@@ -100,7 +100,7 @@ function Cart() {
                             </thead>
                             <tbody>
                                 {cartshow.map((cart, index) => (
-                                    <tr>
+                                    <tr key={index}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{cart?.book?.name}</td>
                                         <td>{cart?.book?.price}</td>

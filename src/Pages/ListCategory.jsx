@@ -7,42 +7,44 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../Context/UserProvider";
 import { factory } from "../factory/factory";
-// import useAuthe from "../customeHooks/useAuthe";
+import useAuthe from "../customeHooks/useAuthe";
+import { getCategories, deleteCategory } from "../api/request.Api";
 
 function ListCategory() {
     const navigate = useNavigate();
-    const { state: auth, dispatch } = useContext(UserContext);
-    // const { auth, dispatch } = useAuthe();
+    // const { state: auth, dispatch } = useContext(UserContext);
+    const { auth, dispatch } = useAuthe();
     async function category_list() {
-        const factory1 = new factory();
-        const response = await factory1.get_list("category", auth);
-        setCategory(response);
+        // const factory1 = new factory();
+        // const response = await factory1.get_list("category", auth);
+        // setCategory(response);
 
-        // try {
-
-        // let response = await axios.get("http://localhost:8000/category", {
-        //     headers: {
-        //         Authorization: `Bearer ${auth.access_token}`,
-        //     },
-        // });
-        // setCategory(response.data);
-        // } catch (err) {
-        //     toast.error("Something went wrong");
-        // }
+        try {
+            // let response = await axios.get("http://localhost:8000/category", {
+            //     headers: {
+            //         Authorization: `Bearer ${auth.access_token}`,
+            //     },
+            // });
+            let response = await getCategories();
+            setCategory(response.data);
+        } catch (err) {
+            toast.error("Something went wrong");
+        }
     }
 
     async function delete_category(id) {
-        const factory1 = new factory();
-        await factory1.delete_data("category", id, auth);
-        category_list();
-        // try {
-        //     await axios.delete(`http://localhost:8000/category/${id}`);
-        //     category_list();
+        // const factory1 = new factory();
+        // await factory1.delete_data("category", id, auth);
+        // category_list();
+        try {
+            await deleteCategory(id);
+            // await axios.delete(`http://localhost:8000/category/${id}`);
+            category_list();
 
-        //     toast.success("Category deleted successfully");
-        // } catch (err) {
-        //     alert(err.message);
-        // }
+            toast.success("Category deleted successfully");
+        } catch (err) {
+            alert(err.message);
+        }
     }
 
     useEffect(() => {

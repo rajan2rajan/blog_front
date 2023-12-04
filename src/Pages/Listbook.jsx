@@ -6,38 +6,47 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserProvider";
 import { factory } from "../factory/factory";
-// import useAuthe from "../customeHooks/useAuthe";
+import useAuthe from "../customeHooks/useAuthe";
+import { getBooks, deleteBook } from "../api/request.Api";
 
 function Listbook() {
     const navigate = useNavigate();
-    const { state: auth, dispatch } = useContext(UserContext);
-    // const { auth, dispatch } = useAuthe();
+    // const { state: auth, dispatch } = useContext(UserContext);
+    const { auth, dispatch } = useAuthe();
     async function book_list() {
-        const factory1 = new factory();
-        const response = await factory1.get_list("book", auth);
-        console.log("book");
-        setBook(response);
+        // const factory1 = new factory();
+        // const response = await factory1.get_list("book", auth);
+        // setBook(response);
+        try {
+            const response = await getBooks();
+            console.log(response.data);
+            setBooks(response.data);
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
     }
 
     const delete_book = async (id) => {
-        const factory1 = new factory();
-        await factory1.delete_data("book", id, auth);
-        book_list();
+        // const factory1 = new factory();
+        // await factory1.delete_data("book", id, auth);
+        // book_list();
 
-        // try {
-        //     await axios.delete(`http://localhost:8000/book/${id}`);
-        //     book_list();
-        //     toast.success("Book deleted successfully");
-        // } catch (err) {
-        //     toast.error(err.message);
-        // }
+        try {
+            // await axios.delete(`http://localhost:8000/book/${id}`);
+            await deleteBook(id);
+            book_list();
+            toast.success("Book deleted successfully");
+        } catch (err) {
+            toast.error(err.message);
+        }
     };
 
     useEffect(() => {
         book_list();
     }, []);
 
-    const [book, setBook] = useState([]);
+    const [book, setBooks] = useState([]);
+    console.log(book);
     return (
         <>
             <div className="container">

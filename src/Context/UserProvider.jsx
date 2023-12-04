@@ -16,19 +16,23 @@ function UserProvider({ children }) {
             case "login":
                 localStorage.setItem("user", JSON.stringify(action.payload.user));
                 localStorage.setItem("access_token", JSON.stringify(action.payload.access_token));
+                localStorage.setItem("refresh_token", JSON.stringify(action.payload.refresh_token));
                 return {
                     ...state,
                     user: action.payload.user,
                     access_token: action.payload.access_token,
+                    refresh_token: action.payload.refresh_token,
                     isLoggedIn: true,
                 };
             case "logout":
                 localStorage.removeItem("user");
                 localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
                 return {
                     ...state,
                     user: null,
                     access_token: null,
+                    refresh_token: null,
                     isLoggedIn: false,
                 };
 

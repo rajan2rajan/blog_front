@@ -5,6 +5,8 @@ import { factory } from "../factory/factory";
 import { useContext } from "react";
 // import useAuthe from "../customeHooks/useAuthe";
 import { UserContext } from "../Context/UserProvider";
+import { toast } from "react-toastify";
+import { addCategory, getCategories } from "../api/request.Api";
 
 function AddCategory() {
     const { state: auth, dispatch } = useContext(UserContext);
@@ -13,16 +15,18 @@ function AddCategory() {
         e.preventDefault();
         const name = document.getElementById("name").value;
         const status = document.getElementById("status").value;
-        const factory1 = new factory();
-        console.log(name, status);
-        await factory1.post_data("category", { name, status }, auth);
 
-        // try {
-        //     await axios.post("http://localhost:8000/category", { name, status });
-        //     toast.success("Category added successfully");
-        // } catch (err) {
-        //     toast.error("please fill all the fields");
-        // }
+        // const factory1 = new factory();
+        // console.log(name, status);
+        // await factory1.post_data("category", { name, status }, auth);
+
+        try {
+            // await axios.post("http://localhost:8000/category", { name, status });
+            await addCategory({ name, status });
+            toast.success("Category added successfully");
+        } catch (err) {
+            toast.error("please fill all the fields");
+        }
     }
 
     return (

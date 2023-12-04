@@ -32,6 +32,7 @@ function Login() {
                 payload: {
                     user: response.data.data.user,
                     access_token: response.data.data.access_token,
+                    refresh_token: response.data.data.refresh_token,
                 },
             });
 

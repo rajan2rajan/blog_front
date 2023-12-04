@@ -25,16 +25,15 @@ function Register() {
 
     async function register(e) {
         e.preventDefault();
-        const factory1 = new factory();
-        await factory1.post_data("auth/register", inputData);
-        // try {
-        //     const response = await axios.post("http://localhost:8000/auth/register", inputData);
-        //     toast.success("Registered Successfully");
-
-        //     // navigate("/login");
-        // } catch (err) {
-        //     toast.error(err.message);
-        // }
+        // const factory1 = new factory();
+        // await factory1.post_data("auth/register", inputData);
+        try {
+            await axios.post("http://localhost:8000/auth/register", inputData);
+            toast.success("Registered Successfully");
+            navigate("/login");
+        } catch (err) {
+            toast.error(err.message);
+        }
     }
 
     return (

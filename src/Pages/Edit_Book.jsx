@@ -6,13 +6,18 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { factory } from "../factory/factory";
-import { useContext } from "react";
-// import useAuthe from "../customeHooks/useAuthe";
+// import { useContext } from "react";
+// import { UserContext } from "../App";
+// import { getCategory } from "../factory/factory";
+
+import { getBook, getCategories, updateBook } from "../api/request.Api";
+
+import useAuthe from "../customeHooks/useAuthe";
 
 function EditBook() {
     const { id } = useParams();
-    const { state: auth, dispatch } = useContext(UserContext);
-    // const { auth, dispatch } = useAuthe();
+    // const { state: auth, dispatch } = useContext(UserContext);
+    const { auth, dispatch } = useAuthe();
     const initialState = {
         name: "",
         price: "",
@@ -31,9 +36,15 @@ function EditBook() {
     }
 
     async function category_list() {
-        const factory1 = new factory();
-        const response = await factory1.get_list("category", auth);
-        setCategory(response);
+        // const factory1 = new factory();
+        // const response = await factory1.get_list("category", auth);
+        // setCategory(response);
+        try {
+            const response = await getCategories();
+            setCategory(response.data);
+        } catch (err) {
+            toast.error(err.message);
+        }
     }
 
     async function edit_book(e) {
@@ -42,58 +53,60 @@ function EditBook() {
         for (let key in inputData) {
             formdata.append(key, inputData[key]);
         }
-        const factory1 = new factory();
-        await factory1.put_data("book", id, formdata, auth);
-        setinputData({
-            ...inputData,
-            name: "",
-            price: "",
-            isbn: "",
-            description: "",
-            images: "",
-        });
+        // const factory1 = new factory();
+        // await factory1.put_data("book", id, formdata, auth);
+        // setinputData({
+        //     ...inputData,
+        //     name: "",
+        //     price: "",
+        //     isbn: "",
+        //     description: "",
+        //     images: "",
+        // });
 
-        // try {
-        //     await axios.put(`http://localhost:8000/book/${id}`, formdata);
-        //     setinputData({
-        //         ...inputData,
-        //         name: "",
-        //         price: "",
-        //         isbn: "",
-        //         description: "",
-        //         images: "",
-        //     });
+        try {
+            await updateBook(id, formdata);
+            // await axios.put(`http://localhost:8000/book/${id}`, formdata);
+            setinputData({
+                ...inputData,
+                name: "",
+                price: "",
+                isbn: "",
+                description: "",
+                images: "",
+            });
 
-        //     toast.success("Book updated Successfully");
-        // } catch (err) {
-        //     toast.error(err.message);
-        // }
+            toast.success("Book updated Successfully");
+        } catch (err) {
+            toast.error(err.message);
+        }
     }
 
     async function get_book() {
-        const factory1 = new factory();
-        const response = await factory1.get_list_id("book", id, auth);
-        setinputData({
-            name: response.name,
-            price: response.price,
-            isbn: response.isbn,
-            description: response.description,
-            category: response.category._id,
-            images: response.images,
-        });
-        // try {
-        //     let response = await axios.get(`http://localhost:8000/book/${id}`);
-        //     setinputData({
-        //         name: response.data.name,
-        //         price: response.data.price,
-        //         isbn: response.data.isbn,
-        //         description: response.data.description,
-        //         category: response.data.category._id,
-        //         images: response.data.images,
-        //     });
-        // } catch (error) {
-        //     toast.error(error.message);
-        // }
+        // const factory1 = new factory();
+        // const response = await factory1.get_list_id("book", id, auth);
+        // setinputData({
+        //     name: response.name,
+        //     price: response.price,
+        //     isbn: response.isbn,
+        //     description: response.description,
+        //     category: response.category._id,
+        //     images: response.images,
+        // });
+        try {
+            // let response = await axios.get(`http://localhost:8000/book/${id}`);
+            let response = await getBook(id);
+            setinputData({
+                name: response.data.data.name,
+                price: response.data.price,
+                isbn: response.data.isbn,
+                description: response.data.description,
+                category: response.data.category._id,
+                images: response.data.images,
+            });
+        } catch (error) {
+            toast.error(error.message);
+        }
     }
 
     const [category, setCategory] = useState([]);
